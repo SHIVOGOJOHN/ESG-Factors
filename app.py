@@ -47,32 +47,36 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get data and scale features
-    data = request.get_json(force=True)
-    data_df = pd.DataFrame([data])[feature_names]
-    scaled_features = scaler.transform(data_df)
-    
-    # --- Make Predictions ---
-    pred_esg = model_esg.predict(scaled_features)[0]
-    pred_financial_return = model_financial_return.predict(scaled_features)[0]
-    pred_roe = model_roe.predict(scaled_features)[0]
-    pred_profit_margin = model_profit_margin.predict(scaled_features)[0]
-    
-    # --- Scale to Percentages ---
-    pct_esg = scale_to_percentage(pred_esg, min_max_values['esg_score']['min'], min_max_values['esg_score']['max'])
-    pct_financial_return = scale_to_percentage(pred_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
-    pct_roe = scale_to_percentage(pred_roe, min_max_values['roe']['min'], min_max_values['roe']['max'])
-    pct_profit_margin = scale_to_percentage(pred_profit_margin, min_max_values['profit_margin']['min'], min_max_values['profit_margin']['max'])
-    
-    # Clamp ESG score to be between 0 and 100
-    pct_esg = max(0, min(100, pct_esg))
+    try:
+        # Get data and scale features
+        data = request.get_json(force=True)
+        data_df = pd.DataFrame([data])[feature_names]
+        scaled_features = scaler.transform(data_df)
+        
+        # --- Make Predictions ---
+        pred_esg = model_esg.predict(scaled_features)[0]
+        pred_financial_return = model_financial_return.predict(scaled_features)[0]
+        pred_roe = model_roe.predict(scaled_features)[0]
+        pred_profit_margin = model_profit_margin.predict(scaled_features)[0]
+        
+        # --- Scale to Percentages ---
+        pct_esg = scale_to_percentage(pred_esg, min_max_values['esg_score']['min'], min_max_values['esg_score']['max'])
+        pct_financial_return = scale_to_percentage(pred_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
+        pct_roe = scale_to_percentage(pct_roe, min_max_values['roe']['min'], min_max_values['roe']['max'])
+        pct_profit_margin = scale_to_percentage(pred_profit_margin, min_max_values['profit_margin']['min'], min_max_values['profit_margin']['max'])
+        
+        # Clamp ESG score to be between 0 and 100
+        pct_esg = max(0, min(100, pct_esg))
 
-    return jsonify({
-        'esg_score': pct_esg,
-        'financial_return': pct_financial_return,
-        'roe': pct_roe,
-        'profit_margin': pct_profit_margin
-    })
+        return jsonify({
+            'esg_score': pct_esg,
+            'financial_return': pct_financial_return,
+            'roe': pct_roe,
+            'profit_margin': pct_profit_margin
+        })
+    except Exception as e:
+        print(f"Error in /predict: {e}")
+        return jsonify({'error': f'Prediction error: {str(e)}. Please check your input data.'}), 500
 
 @app.route('/predict_csv', methods=['POST'])
 def predict_csv():
@@ -104,7 +108,7 @@ def predict_csv():
                 pred_profit_margin = model_profit_margin.predict(scaled_features)[0]
                 
                 pct_esg = scale_to_percentage(pred_esg, min_max_values['esg_score']['min'], min_max_values['esg_score']['max'])
-                pct_financial_return = scale_to_percentage(pred_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
+                pct_financial_return = scale_to_percentage(pct_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
                 pct_roe = scale_to_percentage(pred_roe, min_max_values['roe']['min'], min_max_values['roe']['max'])
                 pct_profit_margin = scale_to_percentage(pred_profit_margin, min_max_values['profit_margin']['min'], min_max_values['profit_margin']['max'])
                 
@@ -123,8 +127,10 @@ def predict_csv():
             return jsonify(predictions)
 
         except ValueError as ve:
+            print(f"ValueError in /predict_csv: {ve}")
             return jsonify({'error': f'Data type error in CSV. Please ensure all feature columns contain numeric values. Specific error: {str(ve)}'}), 400
         except Exception as e:
+            print(f"Error in /predict_csv: {e}")
             return jsonify({'error': f'Error processing CSV: {str(e)}. Please check your CSV format and data.'}), 500
     
     return jsonify({'error': 'Invalid file type'}), 400
