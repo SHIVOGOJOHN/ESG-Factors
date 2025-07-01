@@ -9,6 +9,7 @@ import psycopg2
 from mysql.connector import Error
 from dotenv import load_dotenv
 import os
+import dotenv
 
 load_dotenv()
 
