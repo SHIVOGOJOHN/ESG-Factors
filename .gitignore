@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# IDEs
+.vscode/
+
+# Models and Data
+*.pkl
+min_max_values.json
+static/data/esg_factors_data.csv
+
+# Environment variables
+.env

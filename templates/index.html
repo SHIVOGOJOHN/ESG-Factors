@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG & Financial Prediction System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">ESG & Financial Prediction System</h1>
+
+        <ul class="nav nav-tabs" id="inputMethodTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="manual-input-tab" data-toggle="tab" href="#manual-input" role="tab" aria-controls="manual-input" aria-selected="true">Manual Input</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="upload-csv-tab" data-toggle="tab" href="#upload-csv" role="tab" aria-controls="upload-csv" aria-selected="false">Upload CSV</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="database-tab" data-toggle="tab" href="#database" role="tab" aria-controls="database" aria-selected="false">Database Integration</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="inputMethodTabContent">
+            <div class="tab-pane fade show active" id="manual-input" role="tabpanel" aria-labelledby="manual-input-tab">
+                <form id="esg-form" class="mt-4">
+            <!-- ... (form inputs remain the same) ... -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="carbon_emissions">Carbon Emissions (10-300)</label>
+                    <input type="number" class="form-control" id="carbon_emissions" placeholder="e.g., 120.5" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="renewable_energy_ratio">Renewable Energy Ratio (0.0-1.0)</label>
+                    <input type="number" class="form-control" id="renewable_energy_ratio" placeholder="e.g., 0.3" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="waste_management_score">Waste Management Score (0-100)</label>
+                    <input type="number" class="form-control" id="waste_management_score" placeholder="e.g., 85" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="water_usage_intensity">Water Usage Intensity (10-100)</label>
+                    <input type="number" class="form-control" id="water_usage_intensity" placeholder="e.g., 40.2" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="biodiversity_score">Biodiversity Score (0-100)</label>
+                    <input type="number" class="form-control" id="biodiversity_score" placeholder="e.g., 60" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="employee_satisfaction">Employee Satisfaction (1-5)</label>
+                    <input type="number" class="form-control" id="employee_satisfaction" placeholder="e.g., 4.2" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="diversity_index">Diversity Index (0.0-1.0)</label>
+                    <input type="number" class="form-control" id="diversity_index" placeholder="e.g., 0.6" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="turnover_rate">Turnover Rate (5-25)</label>
+                    <input type="number" class="form-control" id="turnover_rate" placeholder="e.g., 15.5" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="philanthropy_spend">Philanthropy Spend (0.1M-5M)</label>
+                    <input type="number" class="form-control" id="philanthropy_spend" placeholder="e.g., 1.2" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="supply_chain_ethics_score">Supply Chain Ethics Score (0-100)</label>
+                    <input type="number" class="form-control" id="supply_chain_ethics_score" placeholder="e.g., 75" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="data_privacy_compliance">Data Privacy Compliance (0 or 1)</label>
+                    <input type="number" class="form-control" id="data_privacy_compliance" placeholder="e.g., 1" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="independent_board_ratio">Independent Board Ratio (0.0-1.0)</label>
+                    <input type="number" class="form-control" id="independent_board_ratio" placeholder="e.g., 0.8" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="executive_pay_ratio">Executive Pay Ratio (20-200)</label>
+                    <input type="number" class="form-control" id="executive_pay_ratio" placeholder="e.g., 50.5" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="proxy_voting_score">Proxy Voting Score (0-100)</label>
+                    <input type="number" class="form-control" id="proxy_voting_score" placeholder="e.g., 65" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="risk_mgmt_score">Risk Management Score (50-90+)</label>
+                    <input type="number" class="form-control" id="risk_mgmt_score" placeholder="e.g., 80" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="audit_transparency">Audit Transparency (0 or 1)</label>
+                    <input type="number" class="form-control" id="audit_transparency" placeholder="e.g., 1" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="governance_framework_score">Governance Framework Score (50-100)</label>
+                    <input type="number" class="form-control" id="governance_framework_score" placeholder="e.g., 70" step="any" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="excluded_sector">Excluded Sector</label>
+                    <select class="form-control" id="excluded_sector" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Predictions</button>
+        </form>
+                <div id="manual-results" class="mt-4">
+                    <div id="manual-message-area"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">ESG Score: <span id="manual-esg-score"></span></h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="manual-esg-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">ESG Score Breakdown</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="manual-esg-breakdown-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">Financial Predictions</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="manual-financial-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">Key Feature Ranges</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="manual-feature-ranges-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="upload-csv" role="tabpanel" aria-labelledby="upload-csv-tab">
+                <div class="mt-4 csv-upload-section">
+                    <h5>Download CSV Template</h5>
+                    <a href="/download_template" class="btn btn-secondary">Download Template</a>
+                </div>
+                <hr class="my-4">
+                <div class="mt-4 csv-upload-section">
+                    <h5>Upload your ESG Data (CSV)</h5>
+                    <form id="csv-upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="csvFile" accept=".csv" required>
+                                <label class="custom-file-label" for="csvFile">Choose file</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload and Get Predictions</button>
+                    </form>
+                </div>
+                <div id="csv-results" class="mt-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">ESG Score: <span id="csv-esg-score"></span></h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="csv-esg-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">ESG Score Breakdown</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="csv-esg-breakdown-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">Financial Predictions</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="csv-financial-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">Key Feature Ranges</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="csv-feature-ranges-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+                <div class="mt-4">
+                    <h5>Database Integration</h5>
+                    <form id="db-form">
+                        <div class="form-group">
+                            <label for="dbType">Database Type</label>
+                            <select class="form-control" id="dbType" required>
+                                <option value="">Select Database</option>
+                                <option value="mysql">MySQL</option>
+                                <option value="postgresql">PostgreSQL</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="dbHost">Host</label>
+                                <input type="text" class="form-control" id="dbHost" placeholder="e.g., localhost" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="dbPort">Port</label>
+                                <input type="number" class="form-control" id="dbPort" placeholder="MySQL: 3306, PostgreSQL: 5432" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="dbUser">User</label>
+                                <input type="text" class="form-control" id="dbUser" placeholder="Database User" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="dbPassword">Password</label>
+                                <input type="password" class="form-control" id="dbPassword" placeholder="Database Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dbName">Database Name</label>
+                            <input type="text" class="form-control" id="dbName" placeholder="Database Name" required>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <label for="queryType">Query Input Method</label>
+                            <select class="form-control" id="queryType" required>
+                                <option value="">Select Query Type</option>
+                                <option value="custom_query">Custom SQL Query</option>
+                                <option value="table_name">Table Name</option>
+                            </select>
+                        </div>
+
+                        <div id="customQueryDiv" class="form-group" style="display: none;">
+                            <label for="customQuery">SQL Query</label>
+                            <textarea class="form-control" id="customQuery" rows="5" placeholder="e.g., SELECT carbon_emissions, renewable_energy_ratio FROM my_esg_data WHERE id = 1"></textarea>
+                        </div>
+
+                        <div id="tableNameDiv" class="form-group" style="display: none;">
+                            <label for="tableName">Table Name</label>
+                            <input type="text" class="form-control" id="tableName" placeholder="e.g., esg_factors_table">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Get Predictions from Database</button>
+                    </form>
+                </div>
+                <div id="db-results" class="mt-4">
+                    <div id="db-message-area"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">ESG Score: <span id="db-esg-score"></span></h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="db-esg-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">ESG Score Breakdown</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="db-esg-breakdown-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">Financial Predictions</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="db-financial-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="text-center">Key Feature Ranges</h4>
+                                <div class="chart-wrapper">
+                                    <canvas id="db-feature-ranges-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+                <p class="mt-4">Database integration functionality will be implemented here.</p>
+            </div>
+        </div>
+        <div id="shared-results" class="mt-4" style="display: none;">
+            <!-- This div will remain hidden and unused, but its content is what was previously in #results -->
+            <div id="shared-results" class="mt-4" style="display: none;">
+            <!-- This div will remain hidden and unused, but its content is what was previously in #results -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4 class="text-center">ESG Score: <span id="esg-score"></span></h4>
+                        <div class="chart-wrapper">
+                            <canvas id="esg-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4 class="text-center">ESG Score Breakdown</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="esg-breakdown-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4 class="text-center">Financial Predictions</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="financial-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4 class="text-center">Key Feature Ranges</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="feature-ranges-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">ESG & Financial Prediction System &copy; 2025</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to hide all results containers
+            function hideAllResults() {
+                $('#manual-results').removeClass('show');
+                $('#csv-results').removeClass('show');
+            }
+
+            // Hide results when switching tabs
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                hideAllResults();
+            });
+
+            const formInputs = [
+                'carbon_emissions', 'renewable_energy_ratio', 'waste_management_score',
+                'water_usage_intensity', 'biodiversity_score', 'employee_satisfaction',
+                'diversity_index', 'turnover_rate', 'philanthropy_spend',
+                'supply_chain_ethics_score', 'data_privacy_compliance', 'independent_board_ratio',
+                'executive_pay_ratio', 'proxy_voting_score', 'risk_mgmt_score',
+                'audit_transparency', 'governance_framework_score', 'excluded_sector'
+            ];
+
+            // Function to load saved data from localStorage
+            function loadSavedData() {
+                const savedData = localStorage.getItem('esgFormData');
+                if (savedData) {
+                    const formData = JSON.parse(savedData);
+                    formInputs.forEach(id => {
+                        const inputElement = $('#' + id);
+                        if (formData[id] !== undefined) {
+                            inputElement.val(formData[id]);
+                        }
+                    });
+                }
+            }
+
+            // Load data when the page loads
+            loadSavedData();
+            hideAllResults(); // Ensure all results are hidden on initial load
+
+            $('#esg-form').on('submit', function(event) {
+                event.preventDefault();
+                
+                var formData = {};
+                formInputs.forEach(id => {
+                    formData[id] = parseFloat($('#' + id).val());
+                });
+
+                // Save current form data to localStorage
+                localStorage.setItem('esgFormData', JSON.stringify(formData));
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        // Hide CSV results
+                        $('#csv-results').removeClass('show');
+
+                        $('#manual-esg-score').text(response.esg_score.toFixed(2) + '%');
+                        $('#manual-results').addClass('show');
+
+                        // Destroy existing charts if they exist
+                        if (window.manualEsgChart) window.manualEsgChart.destroy();
+                        if (window.manualFinancialChart) window.manualFinancialChart.destroy();
+                        if (window.manualEsgBreakdownChart) window.manualEsgBreakdownChart.destroy();
+                        if (window.manualFeatureRangesChart) window.manualFeatureRangesChart.destroy();
+
+                        // ESG Score Chart
+                        window.manualEsgChart = new Chart(document.getElementById('manual-esg-chart'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['ESG Score', ''],
+                                datasets: [{
+                                    data: [response.esg_score, 100 - response.esg_score],
+                                    backgroundColor: ['#28a745', '#e9ecef'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                cutoutPercentage: 80,
+                                legend: { display: false },
+                                title: {
+                                    display: false
+                                }
+                            }
+                        });
+
+                        // Financial Predictions Chart
+                        window.manualFinancialChart = new Chart(document.getElementById('manual-financial-chart'), {
+                            type: 'bar', // Changed to bar chart for better comparison of different metrics
+                            data: {
+                                labels: ['Financial Return', 'ROE', 'Profit Margin'],
+                                datasets: [{
+                                    label: 'Percentage',
+                                    data: [response.financial_return, response.roe, response.profit_margin],
+                                    backgroundColor: ['#007bff', '#17a2b8', '#ffc107'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Financial Predictions (%)'
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            max: 100 // Assuming percentages
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+
+                        // ESG Score Breakdown Chart (Placeholder - requires more data from backend)
+                        window.manualEsgBreakdownChart = new Chart(document.getElementById('manual-esg-breakdown-chart'), {
+                            type: 'pie',
+                            data: {
+                                labels: ['Environmental', 'Social', 'Governance'],
+                                datasets: [{
+                                    data: [33, 33, 34], // Placeholder data
+                                    backgroundColor: ['#28a745', '#ffc107', '#007bff'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                legend: { position: 'bottom' },
+                                title: {
+                                    display: true,
+                                    text: 'ESG Score Breakdown (Placeholder)'
+                                }
+                            }
+                        });
+
+                        // Key Feature Ranges Chart (Placeholder - requires more data from backend)
+                        window.manualFeatureRangesChart = new Chart(document.getElementById('manual-feature-ranges-chart'), {
+                            type: 'bar',
+                            data: {
+                                labels: ['Carbon Emissions (t)', 'Renewable Energy (%)', 'Turnover Rate (%)', 'Executive Pay Ratio'],
+                                datasets: [{
+                                    label: 'Input Value',
+                                    data: [formData.carbon_emissions, formData.renewable_energy_ratio, formData.turnover_rate, formData.executive_pay_ratio],
+                                    backgroundColor: '#17a2b8'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: { display: false },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Key Feature Inputs'
+                                }
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide CSV results
+                        $('#csv-results').removeClass('show');
+
+                        // Display error in manual results
+                        $('#manual-results').html(`<div class="alert alert-danger">Error: ${xhr.responseJSON.error}</div>`);
+                        $('#manual-results').addClass('show');
+                    }
+                });
+            });
+
+            // CSV Upload Form Submission
+            $('#csv-upload-form').on('submit', function(event) {
+                event.preventDefault();
+                
+                var formData = new FormData();
+                formData.append('csvFile', $('#csvFile')[0].files[0]);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict_csv',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Hide manual results
+                        $('#manual-results').removeClass('show');
+
+                        if (response.length === 0) {
+                            $('#csv-results').html('<div class="alert alert-warning">No predictions returned for the uploaded CSV.</div>');
+                            $('#csv-results').addClass('show');
+                            return;
+                        }
+
+                        const firstPrediction = response[0];
+
+                        // Update ESG score display
+                        $('#csv-esg-score').text(firstPrediction.esg_score.toFixed(2) + '%');
+                        $('#csv-results').addClass('show');
+
+                        // Destroy existing charts if they exist
+                        if (window.csvEsgChart) window.csvEsgChart.destroy();
+                        if (window.csvFinancialChart) window.csvFinancialChart.destroy();
+                        if (window.csvEsgBreakdownChart) window.csvEsgBreakdownChart.destroy();
+                        if (window.csvFeatureRangesChart) window.csvFeatureRangesChart.destroy();
+
+                        // ESG Score Chart
+                        window.csvEsgChart = new Chart(document.getElementById('csv-esg-chart'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['ESG Score', ''],
+                                datasets: [{
+                                    data: [firstPrediction.esg_score, 100 - firstPrediction.esg_score],
+                                    backgroundColor: ['#28a745', '#e9ecef'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                cutoutPercentage: 80,
+                                legend: { display: false },
+                                title: {
+                                    display: false
+                                }
+                            }
+                        });
+
+                        // Financial Predictions Chart
+                        window.csvFinancialChart = new Chart(document.getElementById('csv-financial-chart'), {
+                            type: 'bar', // Changed to bar chart for better comparison of different metrics
+                            data: {
+                                labels: ['Financial Return', 'ROE', 'Profit Margin'],
+                                datasets: [{
+                                    label: 'Percentage',
+                                    data: [firstPrediction.financial_return, firstPrediction.roe, firstPrediction.profit_margin],
+                                    backgroundColor: ['#007bff', '#17a2b8', '#ffc107'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Financial Predictions (%)'
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            max: 100 // Assuming percentages
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+
+                        // ESG Score Breakdown Chart (Placeholder - requires more data from backend)
+                        window.csvEsgBreakdownChart = new Chart(document.getElementById('csv-esg-breakdown-chart'), {
+                            type: 'pie',
+                            data: {
+                                labels: ['Environmental', 'Social', 'Governance'],
+                                datasets: [{
+                                    data: [33, 33, 34], // Placeholder data
+                                    backgroundColor: ['#28a745', '#ffc107', '#007bff'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                legend: { position: 'bottom' },
+                                title: {
+                                    display: true,
+                                    text: 'ESG Score Breakdown (Placeholder)'
+                                }
+                            }
+                        });
+
+                        // Key Feature Ranges Chart
+                        const featureLabels = Object.keys(firstPrediction.feature_ranges);
+                        const inputValues = featureLabels.map(feature => firstPrediction.input_features[feature]);
+                        const minRanges = featureLabels.map(feature => firstPrediction.feature_ranges[feature].min);
+                        const maxRanges = featureLabels.map(feature => firstPrediction.feature_ranges[feature].max);
+
+                        window.csvFeatureRangesChart = new Chart(document.getElementById('csv-feature-ranges-chart'), {
+                            type: 'bar',
+                            data: {
+                                labels: featureLabels,
+                                datasets: [
+                                    {
+                                        label: 'Min Range',
+                                        data: minRanges,
+                                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                                    },
+                                    {
+                                        label: 'Max Range',
+                                        data: maxRanges,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                                    },
+                                    {
+                                        label: 'Input Value',
+                                        data: inputValues,
+                                        backgroundColor: 'rgba(75, 192, 192, 1)'
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: { position: 'bottom' },
+                                scales: {
+                                    xAxes: [{
+                                        stacked: false,
+                                        ticks: {
+                                            autoSkip: true,
+                                            maxRotation: 90,
+                                            minRotation: 90
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        stacked: false,
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Key Feature Ranges and Input Values'
+                                }
+                            }
+                        });
+
+                        // Display a message if more than one row was processed
+                        if (response.length > 1) {
+                            $('#csv-results').prepend('<div class="alert alert-info">Only the first row of your CSV is visualized.</div>');
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide CSV results
+                        $('#csv-results').removeClass('show');
+
+                        // Display error in manual results
+                        $('#manual-results').html(`<div class="alert alert-danger">Error: ${xhr.responseJSON.error}</div>`);
+                        $('#manual-results').addClass('show');
+                    }
+                });
+            });
+
+            // Update custom file input label
+            $('.custom-file-input').on('change', function() {
+                let fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass("selected").html(fileName);
+            });
+
+            // Database form logic
+            $('#queryType').on('change', function() {
+                const selectedType = $(this).val();
+                $('#customQueryDiv').hide();
+                $('#tableNameDiv').hide();
+                if (selectedType === 'custom_query') {
+                    $('#customQueryDiv').show();
+                } else if (selectedType === 'table_name') {
+                    $('#tableNameDiv').show();
+                }
+            });
+
+            $('#db-form').on('submit', function(event) {
+                event.preventDefault();
+                console.log("Database form submitted!");
+
+                var formData = {
+                    db_type: $('#dbType').val(),
+                    db_host: $('#dbHost').val(),
+                    db_port: $('#dbPort').val(),
+                    db_user: $('#dbUser').val(),
+                    db_password: $('#dbPassword').val(),
+                    db_name: $('#dbName').val(),
+                    query_type: $('#queryType').val()
+                };
+
+                if (formData.query_type === 'custom_query') {
+                    formData.user_input = $('#customQuery').val();
+                } else if (formData.query_type === 'table_name') {
+                    formData.user_input = $('#tableName').val();
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict_from_db',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        // Hide other results
+                        $('#manual-results').removeClass('show');
+                        $('#csv-results').removeClass('show');
+
+                        if (response.length === 0) {
+                            $('#db-message-area').html('<div class="alert alert-warning">No predictions returned from the database.</div>');
+                            $('#db-results').addClass('show');
+                            return;
+                        }
+
+                        const firstPrediction = response[0];
+
+                        // Update ESG score display
+                        $('#db-esg-score').text(firstPrediction.esg_score.toFixed(2) + '%');
+                        $('#db-results').addClass('show');
+
+                        // Destroy existing charts if they exist
+                        if (window.dbEsgChart) window.dbEsgChart.destroy();
+                        if (window.dbFinancialChart) window.dbFinancialChart.destroy();
+                        if (window.dbEsgBreakdownChart) window.dbEsgBreakdownChart.destroy();
+                        if (window.dbFeatureRangesChart) window.dbFeatureRangesChart.destroy();
+
+                        // ESG Score Chart
+                        window.dbEsgChart = new Chart(document.getElementById('db-esg-chart'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['ESG Score', ''],
+                                datasets: [{
+                                    data: [firstPrediction.esg_score, 100 - firstPrediction.esg_score],
+                                    backgroundColor: ['#28a745', '#e9ecef'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                cutoutPercentage: 80,
+                                legend: { display: false },
+                                title: {
+                                    display: false
+                                }
+                            }
+                        });
+
+                        // Financial Predictions Chart
+                        window.dbFinancialChart = new Chart(document.getElementById('db-financial-chart'), {
+                            type: 'bar',
+                            data: {
+                                labels: ['Financial Return', 'ROE', 'Profit Margin'],
+                                datasets: [{
+                                    label: 'Percentage',
+                                    data: [firstPrediction.financial_return, firstPrediction.roe, firstPrediction.profit_margin],
+                                    backgroundColor: ['#007bff', '#17a2b8', '#ffc107'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Financial Predictions (%)'
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            max: 100
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+
+                        // ESG Score Breakdown Chart (Placeholder - requires more data from backend)
+                        window.dbEsgBreakdownChart = new Chart(document.getElementById('db-esg-breakdown-chart'), {
+                            type: 'pie',
+                            data: {
+                                labels: ['Environmental', 'Social', 'Governance'],
+                                datasets: [{
+                                    data: [33, 33, 34], // Placeholder data
+                                    backgroundColor: ['#28a745', '#ffc107', '#007bff'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                legend: { position: 'bottom' },
+                                title: {
+                                    display: true,
+                                    text: 'ESG Score Breakdown (Placeholder)'
+                                }
+                            }
+                        });
+
+                        // Key Feature Ranges Chart
+                        const featureLabels = Object.keys(firstPrediction.feature_ranges);
+                        const inputValues = featureLabels.map(feature => firstPrediction.input_features[feature]);
+                        const minRanges = featureLabels.map(feature => firstPrediction.feature_ranges[feature].min);
+                        const maxRanges = featureLabels.map(feature => firstPrediction.feature_ranges[feature].max);
+
+                        window.dbFeatureRangesChart = new Chart(document.getElementById('db-feature-ranges-chart'), {
+                            type: 'bar',
+                            data: {
+                                labels: featureLabels,
+                                datasets: [
+                                    {
+                                        label: 'Min Range',
+                                        data: minRanges,
+                                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                                    },
+                                    {
+                                        label: 'Max Range',
+                                        data: maxRanges,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                                    },
+                                    {
+                                        label: 'Input Value',
+                                        data: inputValues,
+                                        backgroundColor: 'rgba(75, 192, 192, 1)'
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: { position: 'bottom' },
+                                scales: {
+                                    xAxes: [{
+                                        stacked: false,
+                                        ticks: {
+                                            autoSkip: true,
+                                            maxRotation: 90,
+                                            minRotation: 90
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        stacked: false,
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Key Feature Ranges and Input Values'
+                                }
+                            }
+                        });
+
+                        // Display a message if more than one row was processed
+                        if (response.length > 1) {
+                            $('#db-message-area').html('<div class="alert alert-info">Only the first row of your database query is visualized.</div>');
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide other results
+                        $('#manual-results').removeClass('show');
+                        $('#csv-results').removeClass('show');
+
+                        // Display error in database results
+                        $('#db-message-area').html(`<div class="alert alert-danger">Error: ${xhr.responseJSON.error}</div>`);
+                        $('#db-results').addClass('show');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
