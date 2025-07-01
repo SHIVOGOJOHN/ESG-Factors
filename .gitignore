@@ -12,10 +12,5 @@ venv/
 # IDEs
 .vscode/
 
-# Models and Data
-*.pkl
-min_max_values.json
-static/data/esg_factors_data.csv
-
 # Environment variables
 .env
