@@ -6,8 +6,36 @@ import pandas as pd
 import json
 import mysql.connector
 import psycopg2
+from mysql.connector import Error
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+
+def get_db_connection():
+    try:
+        connection=mysql.connector.connect(
+            charset="utf8mb4",
+            connection_timeout=10,
+            database="defaultdb",
+            host="mysql-f3601b9-jonesjorney-bd4e.f.aivencloud.com",
+            password=os.getenv('DB_PASSWORD'),
+            port=21038,
+            user=os.getenv('DB_USER')
+        )
+        if connection.is_connected():
+            print("Connected to the database")
+        else:
+            print("Failed to connect to the database") 
+        return connection
+    except Error:
+        print("""
+            Database Connection Error!,
+            Try again !""")
+        return None
 
 # --- 1. Load Models and Supporting Files ---
 
@@ -151,13 +179,9 @@ def predict_from_db():
     cursor = None
     try:
         if db_type == 'mysql':
-            conn = mysql.connector.connect(
-                host=db_host,
-                port=db_port,
-                user=db_user,
-                password=db_password,
-                database=db_name
-            )
+            conn = get_db_connection()
+            if conn is None:
+                return jsonify({'error': 'Failed to connect to MySQL database.'}), 500
         elif db_type == 'postgresql':
             conn = psycopg2.connect(
                 host=db_host,
