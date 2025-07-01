@@ -62,7 +62,7 @@ def predict():
         # --- Scale to Percentages ---
         pct_esg = scale_to_percentage(pred_esg, min_max_values['esg_score']['min'], min_max_values['esg_score']['max'])
         pct_financial_return = scale_to_percentage(pred_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
-        pct_roe = scale_to_percentage(pct_roe, min_max_values['roe']['min'], min_max_values['roe']['max'])
+        pct_roe = scale_to_percentage(pred_roe, min_max_values['roe']['min'], min_max_values['roe']['max'])
         pct_profit_margin = scale_to_percentage(pred_profit_margin, min_max_values['profit_margin']['min'], min_max_values['profit_margin']['max'])
         
         # Clamp ESG score to be between 0 and 100
@@ -108,7 +108,7 @@ def predict_csv():
                 pred_profit_margin = model_profit_margin.predict(scaled_features)[0]
                 
                 pct_esg = scale_to_percentage(pred_esg, min_max_values['esg_score']['min'], min_max_values['esg_score']['max'])
-                pct_financial_return = scale_to_percentage(pct_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
+                pct_financial_return = scale_to_percentage(pred_financial_return, min_max_values['financial_return']['min'], min_max_values['financial_return']['max'])
                 pct_roe = scale_to_percentage(pred_roe, min_max_values['roe']['min'], min_max_values['roe']['max'])
                 pct_profit_margin = scale_to_percentage(pred_profit_margin, min_max_values['profit_margin']['min'], min_max_values['profit_margin']['max'])
                 
@@ -222,6 +222,7 @@ def predict_from_db():
         return jsonify(predictions)
 
     except Exception as e:
+        print(f"Error in /predict_from_db: {e}")
         return jsonify({'error': f'Database error: {str(e)}. Please check your connection details and query.'}), 500
     finally:
         if cursor:
